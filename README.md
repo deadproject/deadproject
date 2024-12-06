@@ -2,7 +2,7 @@
 
 My name is Project.
 
-### I’m currently working on
+### Check out what I'm currently working on
 
 [UnattendedWinstall](https://github.com/deadproject/UnattendedWinstall)
 
