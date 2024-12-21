@@ -2,8 +2,10 @@
 
 My name is **Project**, Web Developer, PowerShell Scripter
 
-#### Languages
-<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/html5/html5-original-wordmark.svg" width="50" height="50"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/css3/css3-original-wordmark.svg" width="50" height="50"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" width="40" height="40"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/powershell/powershell-original.svg" width="50" height="50" style="vertical-align: 4px;"> <!-- Adjusted PowerShell logo -->
+## 🛠️ Technologies I Use
+
+- **Frontend**: HTML, CSS, JavaScript
+- **Scripting**: PowerShell
 
 ### Check out what I'm currently working on
 
