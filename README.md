@@ -5,7 +5,7 @@ My name is **Project**, Web Developer, PowerShell Scripter
 ## 🛠️ Technologies I Use
 
 - **Frontend**: HTML, CSS, JavaScript
-- **Scripting**: PowerShell
+- **Scripting**: PowerShell,Shell
 
 ### Check out what I'm currently working on
 
