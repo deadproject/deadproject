@@ -1,11 +1,11 @@
 ### Hi there 👋
 
-My name is **Project**, Web Developer, PowerShell Scripter
+My name is **Project**, Web Developer, PowerShell/Bash Scripter
 
 ## 🛠️ Technologies I Use
 
 - **Frontend**: HTML, CSS, JavaScript
-- **Scripting**: PowerShell,Shell
+- **Scripting**: PowerShell,Bash
 
 ### Check out what I'm currently working on
 
