@@ -14,20 +14,19 @@ My name is **Project**, Web Developer, PowerShell/Bash Scripter
 
 ### Operating Systems
 
-[![Arch Linux](https://img.shields.io/badge/Arch-65%25-808080?style=flat-square&logo=arch-linux&logoColor=FFFFFF)](https://www.archlinux.org/)
+[![Arch Linux](https://img.shields.io/badge/Arch-65%25-808080?style=flat&logo=arch-linux&logoColor=FFFFFF)](https://www.archlinux.org/)
 
-[![Debian](https://img.shields.io/badge/Debian-10%25-808080?style=flat-square&logo=debian&logoColor=FFFFFF)](https://www.debian.org/)
+[![Debian](https://img.shields.io/badge/Debian-10%25-808080?style=flat&logo=debian&logoColor=FFFFFF)](https://www.debian.org/)
 
-[![Windows 11](https://img.shields.io/badge/Windows_11-25%25-808080?style=flat-square&logo=windows-11&logoColor=FFFFFF)](https://www.microsoft.com/windows/)
+[![Windows 11](https://img.shields.io/badge/Windows_11-25%25-808080?style=flat&logo=windows-11&logoColor=FFFFFF)](https://www.microsoft.com/windows/)
 
 ### Code Editors
 
-[![Visual Studio Code](https://img.shields.io/badge/VSCode-79%25-808080?style=flat-square&logo=visual-studio-code&logoColor=FFFFFF)](https://code.visualstudio.com/)
+[![Visual Studio Code](https://img.shields.io/badge/VSCode-79%25-808080?style=flat&logo=visual-studio-code&logoColor=FFFFFF)](https://code.visualstudio.com/)
 
-[![Neovim](https://img.shields.io/badge/Neovim-15%25-808080?style=flat-square&logo=neovim&logoColor=FFFFFF)](https://neovim.io/)
+[![Neovim](https://img.shields.io/badge/Neovim-15%25-808080?style=flat&logo=neovim&logoColor=FFFFFF)](https://neovim.io/)
 
-[![Cursor](https://img.shields.io/badge/Cursor-6%25-808080?style=flat-square&logo=cursor&logoColor=FFFFFF)](https://www.cursor.com/)
-
+[![Cursor](https://img.shields.io/badge/Cursor-6%25-808080?style=flat&logo=cursor&logoColor=FFFFFF)](https://www.cursor.com/)
 
 > **Tip:** Choose the Linux distribution that best fits your needs or resonates with you.  
 > It's all about what works for you, enhances your experience, and fuels your creativity.  
