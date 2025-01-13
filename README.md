@@ -12,8 +12,14 @@ My name is **Project**, Web Developer, PowerShell/Bash Scripter
 - [UnattendedWinstall](https://github.com/deadproject/UnattendedWinstall)
 - [WinltsAct](https://github.com/deadproject/WinltsAct) 
 
-### Operating Systems
-<img src="https://banner2.cleanpng.com/20180414/req/avftib6f2.webp" width="50" height="50"> <img src="https://www.debian.org/logos/openlogo-nd.svg" width="50" height="50"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuYypmGR91DF2fvasAhTRnYRNl0pmT4cnWnA&s" width="50" height="50">
+## Operating Systems
+
+**Arch:** ![65%](https://progress-bar.dev/65/) 65%
+
+**Debian:** ![10%](https://progress-bar.dev/10/) 10%
+
+**Windows 11:** ![25%](https://progress-bar.dev/25/) 25%
+
 
 > **Tip:** Choose the Linux distribution that best fits your needs or resonates with you.  
 > It's all about what works for you, enhances your experience, and fuels your creativity.  
