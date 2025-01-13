@@ -10,7 +10,8 @@ My name is **Project**, Web Developer, PowerShell/Bash Scripter
 ### Check out what I'm currently working on
 
 - [UnattendedWinstall](https://github.com/deadproject/UnattendedWinstall)
-- [WinltsAct](https://github.com/deadproject/WinltsAct) 
+- [WinltsAct](https://github.com/deadproject/WinltsAct)
+- [Echo-Browser](https://github.com/deadproject/Echo-browser)
 
 ### Operating Systems
 
