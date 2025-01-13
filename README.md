@@ -14,11 +14,13 @@ My name is **Project**, Web Developer, PowerShell/Bash Scripter
 
 ## Operating Systems
 
-**Arch:** ![65%](https://progress-bar.dev/65/) 65%
+## Operating Systems
 
-**Debian:** ![10%](https://progress-bar.dev/10/) 10%
+**Arch:** <progress value="65" max="100"></progress> 65%
 
-**Windows 11:** ![25%](https://progress-bar.dev/25/) 25%
+**Debian:** <progress value="10" max="100"></progress> 10%
+
+**Windows 11:** <progress value="25" max="100"></progress> 25%
 
 
 > **Tip:** Choose the Linux distribution that best fits your needs or resonates with you.  
