@@ -15,11 +15,11 @@ My name is **Project**, Web Developer, PowerShell/Bash Scripter
 
 ### Operating Systems
 
-[![Arch Linux](https://img.shields.io/badge/Arch-65%25-808080?style=flat&logo=arch-linux&logoColor=FFFFFF)](https://www.archlinux.org/)
+[![Arch Linux](https://img.shields.io/badge/Arch-68%25-808080?style=flat&logo=arch-linux&logoColor=FFFFFF)](https://www.archlinux.org/)
 
 [![Debian](https://img.shields.io/badge/Debian-10%25-808080?style=flat&logo=debian&logoColor=FFFFFF)](https://www.debian.org/)
 
-[![Windows 11](https://img.shields.io/badge/Windows_11-25%25-808080?style=flat&logo=windows-11&logoColor=FFFFFF)](https://www.microsoft.com/windows/)
+[![Windows 11](https://img.shields.io/badge/Windows_11-22%25-808080?style=flat&logo=windows-11&logoColor=FFFFFF)](https://www.microsoft.com/windows/)
 
 ### Code Editors
 
