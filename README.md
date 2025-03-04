@@ -14,10 +14,9 @@ My name is **Project**, Web Developer, PowerShell/Bash Scripter
 ![Bash](https://img.shields.io/badge/Bash-4EAA25?style=for-the-badge&logo=gnu-bash&logoColor=white)
 
 ### Check out what I'm currently working on
-
+- [FixOs](https://github.com/deadproject/FixOS)
 - [UnattendedWinstall](https://github.com/deadproject/UnattendedWinstall)
 - [WinltsAct](https://github.com/deadproject/WinltsAct)
-- [Echo-Browser](https://github.com/deadproject/Echo-browser)
 
 ### Operating Systems
 
