@@ -24,12 +24,6 @@ My name is **Project**, Web Developer, PowerShell/Bash Scripter
 ![Debian](https://img.shields.io/badge/Debian_10%25-1A2C3B?style=for-the-badge&logo=debian&logoColor=A81D33)
 ![Windows](https://img.shields.io/badge/Windows_25%25-1A2C3B?style=for-the-badge&logo=windows&logoColor=0078D4)
 
-### Code Editors
-
-![Visual Studio Code](https://img.shields.io/badge/VSCode-1A2C3B?style=for-the-badge&logo=visualstudiocode&logoColor=007ACC)
-![Neovim](https://img.shields.io/badge/Neovim-1A2C3B?style=for-the-badge&logo=neovim&logoColor=57A143)
-![Cursor](https://img.shields.io/badge/Cursor-1A2C3B?style=for-the-badge&logo=cursor&logoColor=000000)
-
 > **Tip:** Choose the Linux distribution that best fits your needs or resonates with you.  
 > It's all about what works for you, enhances your experience, and fuels your creativity.  
 > Pick the one that vibes with you the most — because your setup should feel like home.
