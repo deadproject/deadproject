@@ -17,7 +17,3 @@ My name is **Project**, Web Developer, PowerShell/Bash Scripter
 - [FixOs](https://github.com/deadproject/FixOS)
 - [UnattendedWinstall](https://github.com/deadproject/UnattendedWinstall)
 - [WinltsAct](https://github.com/deadproject/WinltsAct)
-
-> **Tip:** Choose the Linux distribution that best fits your needs or resonates with you.  
-> It's all about what works for you, enhances your experience, and fuels your creativity.  
-> Pick the one that vibes with you the most — because your setup should feel like home.
