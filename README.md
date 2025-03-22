@@ -18,12 +18,6 @@ My name is **Project**, Web Developer, PowerShell/Bash Scripter
 - [UnattendedWinstall](https://github.com/deadproject/UnattendedWinstall)
 - [WinltsAct](https://github.com/deadproject/WinltsAct)
 
-### Operating Systems
-
-![Arch Linux](https://img.shields.io/badge/Arch_Linux_65%25-1A2C3B?style=for-the-badge&logo=arch-linux&logoColor=1793D1)
-![Debian](https://img.shields.io/badge/Debian_10%25-1A2C3B?style=for-the-badge&logo=debian&logoColor=A81D33)
-![Windows](https://img.shields.io/badge/Windows_25%25-1A2C3B?style=for-the-badge&logo=windows&logoColor=0078D4)
-
 > **Tip:** Choose the Linux distribution that best fits your needs or resonates with you.  
 > It's all about what works for you, enhances your experience, and fuels your creativity.  
 > Pick the one that vibes with you the most — because your setup should feel like home.
