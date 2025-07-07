@@ -14,7 +14,7 @@ My name is **Project**, Web Developer, PowerShell/Bash Scripter
 ![Bash](https://img.shields.io/badge/Bash-4EAA25?style=for-the-badge&logo=gnu-bash&logoColor=white)
 
 ### Check out what I'm currently working on
-- [UnattendedWinstall](https://github.com/deadproject/UnattendedWinstall)
+- [UnattendedWinstall](https://github.com/deadproject/FixOs)
 - [myTerminal](https://github.com/deadproject/myTerminal)
 
 ### Updates
