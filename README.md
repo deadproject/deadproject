@@ -10,7 +10,7 @@
 
 Make sure to check the updates for UnattendWinstall - [Uw-Update](https://github.com/deadproject/UwFixOs/discussions/3)
 
-### 🧰 Languages and Tools
+### 🛠️ Languages and Tools
 
 <img align="left" alt="Git" width="30px" style="padding-right:10px;" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" />
 <img align="left" alt="Linux" width="30px" style="padding-right:10px;" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" />
