@@ -2,10 +2,6 @@
 
 **Project**, Web Developer, PowerShell/Bash Scripter
 
-### Check out what I'm currently working on
-- [UnattendedWinstall](https://github.com/deadproject/FixOs)
-- [myTerminal](https://github.com/deadproject/myTerminal)
-
 ### Updates
 
 Make sure to check the updates for UnattendWinstall - [Uw-Update](https://github.com/deadproject/UwFixOs/discussions/3)
