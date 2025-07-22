@@ -1,6 +1,6 @@
 # Hi there 👋
 
-### **Project**, Web Developer, PowerShell/Bash Scripter
+### My name is **Project**, Web Developer, PowerShell/Bash Scripter
 
 ## Updates 🔄 
 
