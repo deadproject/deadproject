@@ -4,7 +4,7 @@
 
 ## Updates 🔄 
 
-Make sure to check the updates for UnattendWinstall - [Uw-Update](https://github.com/deadproject/UwFixOs/discussions/3)
+Make sure to check the updates for FixOs - [FixOs-Update](https://github.com/deadproject/FixOs/discussions/4)
 
 ## Languages and Tools 🛠️
 
