@@ -4,7 +4,7 @@
 
 ## Updates 🔄 
 
-Make sure to check the updates for FixOs - [FixOs-Update](https://github.com/deadproject/FixOs/discussions/4)
+Make sure to check the updates for FixOs - [FixOs-Update](https://github.com/deadproject/FixOs/discussions/2#discussioncomment-14569560)
 
 ## Languages and Tools 🛠️
 
