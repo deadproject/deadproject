@@ -1,20 +1,54 @@
-# Hi there 👋
+<!-- Modern GitHub README -->
 
-### My name is **Project**, Web Developer, PowerShell/Bash Scripter
+<div align="center">
 
-## Updates 🔄 
+<img src="https://skillicons.dev/icons?i=arch" height="60" alt="Arch Linux Logo" />
+<br />
+<sub><strong><span style="color:#00C6FF;">I use Arch btw</span></strong></sub>
 
-Make sure to check the updates for FixOs - [FixOs-Update](https://github.com/DeveIopmentSpace/FixOs/discussions/2#discussioncomment-14569560)
+<h1>
+  <span style="background: linear-gradient(90deg,#00C6FF,#0072FF,#00C6FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+    Project
+  </span>
+</h1>
 
-## Languages and Tools 🛠️
+<h3>
+  <span style="background: linear-gradient(90deg,#00C6FF,#0072FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+    Front-End Developer • Automation Builder
+  </span>
+</h3>
 
-<img align="left" alt="Git" width="30px" style="padding-right:10px;" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" />
-<img align="left" alt="Linux" width="30px" style="padding-right:10px;" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" />
-<img align="left" alt="HTML" width="30px" style="padding-right:10px;" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-plain.svg" />
-<img align="left" alt="CSS" width="30px" style="padding-right:10px;" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-plain.svg" />
-<img align="left" alt="JavaScript" width="30px" style="padding-right:10px;" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-plain.svg" />
-<img align="left" alt="NodeJS" width="30px" style="padding-right:10px;" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" />
-<img align="left" alt="C++" width="30px" style="padding-right:10px;" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-line.svg" />
-<img align="left" alt="GitHub" width="30px" style="padding-right:10px;" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" />
-<img align="left" alt="Bash" width="30px" style="padding-right:10px;" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bash/bash-original.svg" />
-<img align="left" alt="PowerShell" width="30px" style="padding-right:10px;" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/powershell/powershell-original.svg" />
+<img src="https://readme-typing-svg.herokuapp.com?font=Inter&duration=3000&color=000000&center=true&vCenter=true&lines=Crafting+fast+interfaces;Building+clean+code;Automating+workflow&background=FFFFFF00" alt="Typing SVG" />
+
+---
+
+### 🎨 Frontend Stack
+
+<p align="center">
+  <img src="https://skillicons.dev/icons?i=html,css,js,ts,bash,powershell,git" height="50" />
+</p>
+
+---
+
+### 🌐 Connect
+
+<p align="center">
+  <a href="https://github.com/DeveIopmentSpace" target="_blank">
+    <img src="https://img.shields.io/badge/devspacE%20-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/>
+  </a>
+  <a href="https://discord.gg/VkQXv7UJaP" target="_blank">
+    <img src="https://img.shields.io/badge/Discord%20Server-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord"/>
+  </a>
+  <a href="http://DevelopmentSpace.pages.dev" target="_blank">
+    <img src="https://img.shields.io/badge/🌐%20Website-00C6FF?style=for-the-badge&logo=google-chrome&logoColor=white" alt="Website"/>
+  </a>
+</p>
+
+---
+
+### ✳️ Quote
+> “Automate the predictable so you can innovate the unpredictable.”
+
+<sub>Built by Project • Owner of <a href="https://github.com/DeveIopmentSpace">DevelopmentSpace</a> • Visit <a href="http://DevelopmentSpace.pages.dev">DevSpace.com</a></sub>
+
+</div>
