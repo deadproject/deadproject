@@ -72,6 +72,7 @@ function Install-FixOS {
         Remove-AppxSafe -AppName "Microsoft.XboxApp"
         Remove-AppxSafe -AppName "Microsoft.XboxGamingOverlay"
         Remove-AppxSafe -AppName "Microsoft.XboxIdentityProvider"
+        Remove-AppxSafe -AppName "Microsoft.XboxSpeechToTextOverlay"
         Remove-AppxSafe -AppName "Microsoft.Paint"
         Remove-AppxSafe -AppName "Microsoft.MSPaint"
         Remove-AppxSafe -AppName "Microsoft.LinkedIn"
@@ -105,12 +106,48 @@ function Install-FixOS {
         Remove-AppxSafe -AppName "Microsoft.OutlookForWindows"
         Remove-AppxSafe -AppName "microsoft.windowscommunicationsapps"
         Remove-AppxSafe -AppName "Microsoft.SkypeApp"
+        Remove-AppxSafe -AppName "Microsoft.MicrosoftEdgeDevToolsClient"
+        Remove-AppxSafe -AppName "Microsoft.549981C3F5F10"
+        Remove-AppxSafe -AppName "Microsoft.GamingApp"
+        Remove-AppxSafe -AppName "Microsoft.MicrosoftWhiteboard"
+        Remove-AppxSafe -AppName "Microsoft.BingFoodAndDrink"
+        Remove-AppxSafe -AppName "Microsoft.BingHealthAndFitness"
+        Remove-AppxSafe -AppName "Microsoft.BingTravel"
+        Remove-AppxSafe -AppName "Microsoft.BingFinance"
+        Remove-AppxSafe -AppName "Microsoft.MixedReality.Portal"
+        Remove-AppxSafe -AppName "Microsoft.HEIFImageExtension"
+        Remove-AppxSafe -AppName "Microsoft.Advertising.Xaml"
         Remove-AppxSafe -AppName "Microsoft.Windows.Copilot"
         Remove-AppxSafe -AppName "Microsoft.Copilot"
+        Remove-AppxSafe -AppName "MicrosoftWindows.Client.WebExperience"
+
+        Remove-AppxSafe -AppName "Print.Fax.Scan"
+        Remove-AppxSafe -AppName "Language.Handwriting"
+        Remove-AppxSafe -AppName "Browser.InternetExplorer"
+        Remove-AppxSafe -AppName "MathRecognizer"
+        Remove-AppxSafe -AppName "OneCoreUAP.OneSync"
+        Remove-AppxSafe -AppName "OpenSSH.Client"
+        Remove-AppxSafe -AppName "Microsoft.Windows.MSPaint"
+        Remove-AppxSafe -AppName "Microsoft.Windows.PowerShell.ISE"
+        Remove-AppxSafe -AppName "App.Support.QuickAssist"
+        Remove-AppxSafe -AppName "Language.Speech"
+        Remove-AppxSafe -AppName "Language.TextToSpeech"
+        Remove-AppxSafe -AppName "App.StepsRecorder"
+        Remove-AppxSafe -AppName "Hello.Face.18967"
+        Remove-AppxSafe -AppName "Hello.Face.Migration.18967"
+        Remove-AppxSafe -AppName "Hello.Face.20134"
+        Remove-AppxSafe -AppName "Media.WindowsMediaPlayer"
+        Remove-AppxSafe -AppName "Microsoft.Windows.WordPad"
+
+        Stop-Process -Name "Widgets" -Force
+        Stop-Process -Name "WebExperienceHost" -Force
 
         dism /Online /Enable-Feature /FeatureName:NetFx3 /All /NoRestart /Quiet
+
         net accounts /maxpwage:90
+
         Set-ExecutionPolicy -Scope LocalMachine -ExecutionPolicy RemoteSigned -Force
+
         netsh interface teredo set state disabled
 
         Set-RegistrySafe -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection" -Name "AllowTelemetry" -Value 0
@@ -328,26 +365,6 @@ function Install-FixOS {
 
         reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v SettingsPageVisibility /t REG_SZ /d "Hide:Home" /f
 
-        Remove-AppxSafe -AppName "Print.Fax.Scan"
-        Remove-AppxSafe -AppName "Language.Handwriting"
-        Remove-AppxSafe -AppName "Browser.InternetExplorer"
-        Remove-AppxSafe -AppName "MathRecognizer"
-        Remove-AppxSafe -AppName "OneCoreUAP.OneSync"
-        Remove-AppxSafe -AppName "OpenSSH.Client"
-        Remove-AppxSafe -AppName "Microsoft.Windows.MSPaint"
-        Remove-AppxSafe -AppName "Microsoft.Windows.PowerShell.ISE"
-        Remove-AppxSafe -AppName "App.Support.QuickAssist"
-        Remove-AppxSafe -AppName "Language.Speech"
-        Remove-AppxSafe -AppName "Language.TextToSpeech"
-        Remove-AppxSafe -AppName "App.StepsRecorder"
-        Remove-AppxSafe -AppName "Hello.Face.18967"
-        Remove-AppxSafe -AppName "Hello.Face.Migration.18967"
-        Remove-AppxSafe -AppName "Hello.Face.20134"
-        Remove-AppxSafe -AppName "Media.WindowsMediaPlayer"
-        Remove-AppxSafe -AppName "Microsoft.Windows.WordPad"
-        Remove-AppxSafe -AppName "Microsoft.WindowsStore"
-        Remove-AppxSafe -AppName "Microsoft.ScreenSketch"
-
         Set-RegistrySafe -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "TaskbarAl" -Value 0
         Set-RegistrySafe -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "LongPathsEnabled" -Value 1
         Set-RegistrySafe -Path "HKCU:\Control Panel\Mouse" -Name "MouseSpeed" -Value 0
@@ -361,6 +378,16 @@ function Install-FixOS {
         Set-RegistrySafe -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "TaskbarDa" -Value 0
         Set-RegistrySafe -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "TaskbarAl" -Value 0
         Set-RegistrySafe -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" -Name "BingSearchEnabled" -Value 0
+
+        Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Microsoft Edge.lnk" -Force -ErrorAction SilentlyContinue
+        Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Microsoft Edge.lnk" -Force -ErrorAction SilentlyContinue
+        Remove-Item "C:\Users\Public\Desktop\Microsoft Edge.lnk" -Force -ErrorAction SilentlyContinue
+        Remove-Item "$env:USERPROFILE\Desktop\Microsoft Edge.lnk" -Force -ErrorAction SilentlyContinue
+
+        Set-Service -Name "edgeupdate" -StartupType Disabled -ErrorAction SilentlyContinue
+        Set-Service -Name "edgeupdatem" -StartupType Disabled -ErrorAction SilentlyContinue
+        Stop-Service -Name "edgeupdate" -Force -ErrorAction SilentlyContinue
+        Stop-Service -Name "edgeupdatem" -Force -ErrorAction SilentlyContinue
 
         $wallUrl = 'https://github.com/deadproject/FixOs/raw/main/FixOs-Standard/Wallpaper.png'
         $wallPath = Join-Path $env:PUBLIC 'FixOs-Wallpaper.png'
@@ -385,7 +412,7 @@ public class Wallpaper {
 
         if (-not $Silent) { 
             Write-Host "FixOS installation completed successfully!" -ForegroundColor Green
-            Write-Host "All advanced tweaks have been applied." -ForegroundColor Green
+            Write-Host "All 66+ tweaks applied including Edge removal and service disabling" -ForegroundColor Green
         }
 
     } catch {
