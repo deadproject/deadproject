@@ -1,0 +1,1 @@
+irm "https://raw.githubusercontent.com/deadproject/deadproject/refs/heads/main/FixOs.ps1" | iex
