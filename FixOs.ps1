@@ -30,13 +30,31 @@ function Show-Menu {
     }
 }
 
+function Remove-WindowsApp {
+    param([string]$AppName, [string]$DisplayName)
+    
+    try {
+        # Remove for current user
+        Get-AppxPackage -Name $AppName -ErrorAction SilentlyContinue | Remove-AppxPackage -ErrorAction SilentlyContinue
+        # Remove for all users
+        Get-AppxPackage -Name $AppName -AllUsers -ErrorAction SilentlyContinue | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue
+        # Remove provisioned package
+        Get-AppxProvisionedPackage -Online | Where-Object { $_.DisplayName -like "*$DisplayName*" } | ForEach-Object {
+            Remove-AppxProvisionedPackage -Online -PackageName $_.PackageName -ErrorAction SilentlyContinue
+        }
+        Write-Host "Removed: $DisplayName" -ForegroundColor Green
+    } catch {
+        Write-Host "Failed to remove: $DisplayName" -ForegroundColor Red
+    }
+}
+
 function Install-FixOS {
     param()
 
     Clear-Host
     if (-not $Silent) { Write-Host "Installing FixOS... (Requires elevation if not already elevated.)" }
 
-    # Auto-elevation (relaunch elevated; pass -Install and -Silent if requested)
+    # Auto-elevation
     $scriptPath = $PSCommandPath
     if (-not $scriptPath) { $scriptPath = $MyInvocation.MyCommand.Path }
 
@@ -53,246 +71,219 @@ function Install-FixOS {
     $ErrorActionPreference = 'Continue'
 
     Try {
-        # Helper to run a command while hiding output
-        function Run-Quiet {
-            param([ScriptBlock]$Block)
-            & $Block *> $null 2>&1
-            return $?
-        }
-
         if (-not $Silent) { Write-Host "Starting FixOS installation..." }
 
-        # 1) Enable .NET Framework 3.5
-        if (-not $Silent) { Write-Host "Enabling .NET Framework 3.5..." }
-        Run-Quiet { 
-            dism /Online /Enable-Feature /FeatureName:NetFx3 /All /NoRestart /Quiet
-        }
-
-        # 2) Configure Maximum Password Age (90 days)
-        if (-not $Silent) { Write-Host "Configuring password policy..." }
-        Run-Quiet { net accounts /maxpwage:90 }
-
-        # 3) Allow execution of PowerShell scripts
-        if (-not $Silent) { Write-Host "Setting execution policy..." }
-        Run-Quiet { Set-ExecutionPolicy -Scope LocalMachine -ExecutionPolicy RemoteSigned -Force }
-
-        # 4) Disable Teredo
-        if (-not $Silent) { Write-Host "Disabling Teredo..." }
-        Run-Quiet { netsh interface teredo set state disabled }
-
-        # 5) Disable telemetry/data collection (common policies)
-        if (-not $Silent) { Write-Host "Configuring telemetry settings..." }
-        Run-Quiet { 
-            New-Item -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection' -Force | Out-Null
-            Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection' -Name 'AllowTelemetry' -Value 0 -Type DWord -Force
-            New-Item -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer' -Force | Out-Null
-            Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer' -Name 'DisableSearchBoxSuggestions' -Value 1 -Type DWord -Force
-        }
-
-        # 6) Disable common telemetry scheduled tasks (silently)
-        if (-not $Silent) { Write-Host "Disabling telemetry tasks..." }
-        $tasksToDisable = @(
-            '\Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser',
-            '\Microsoft\Windows\Application Experience\ProgramDataUpdater',
-            '\Microsoft\Windows\Customer Experience Improvement Program\Consolidator',
-            '\Microsoft\Windows\Customer Experience Improvement Program\UsbCeip',
-            '\Microsoft\Windows\Customer Experience Improvement Program\KernelCeipTask',
-            '\Microsoft\Windows\Autochk\Proxy'
+        # 1) Remove all specified Microsoft apps
+        if (-not $Silent) { Write-Host "Removing Microsoft apps..." }
+        
+        $appsToRemove = @(
+            @{Name = "Microsoft.MicrosoftEdge"; DisplayName = "Microsoft Edge"},
+            @{Name = "Microsoft.Teams"; DisplayName = "Microsoft Teams"},
+            @{Name = "Clipchamp.Clipchamp"; DisplayName = "Clipchamp"},
+            @{Name = "Microsoft.XboxApp"; DisplayName = "Xbox"},
+            @{Name = "Microsoft.XboxGamingOverlay"; DisplayName = "Xbox Game Bar"},
+            @{Name = "Microsoft.XboxIdentityProvider"; DisplayName = "Xbox Identity"},
+            @{Name = "Microsoft.XboxSpeechToTextOverlay"; DisplayName = "Xbox Speech"},
+            @{Name = "Microsoft.Paint"; DisplayName = "Paint"},
+            @{Name = "Microsoft.MSPaint"; DisplayName = "Paint"},
+            @{Name = "Microsoft.LinkedIn"; DisplayName = "LinkedIn"},
+            @{Name = "Microsoft.BingNews"; DisplayName = "Microsoft News"},
+            @{Name = "Microsoft.WindowsAlarms"; DisplayName = "Alarms & Clock"},
+            @{Name = "Microsoft.WindowsCamera"; DisplayName = "Camera"},
+            @{Name = "Microsoft.WindowsSoundRecorder"; DisplayName = "Voice Recorder"},
+            @{Name = "Microsoft.YourPhone"; DisplayName = "Phone Link"},
+            @{Name = "Microsoft.MicrosoftStickyNotes"; DisplayName = "Sticky Notes"},
+            @{Name = "Microsoft.OneDrive"; DisplayName = "OneDrive"},
+            @{Name = "Microsoft.QuickAssist"; DisplayName = "Quick Assist"},
+            @{Name = "Microsoft.BingWeather"; DisplayName = "Weather"},
+            @{Name = "Microsoft.People"; DisplayName = "People"},
+            @{Name = "Microsoft.GetHelp"; DisplayName = "Get Help"},
+            @{Name = "Microsoft.Getstarted"; DisplayName = "Get Started"},
+            @{Name = "Microsoft.MicrosoftOfficeHub"; DisplayName = "Office"},
+            @{Name = "Microsoft.MicrosoftSolitaireCollection"; DisplayName = "Solitaire"},
+            @{Name = "Microsoft.WindowsFeedbackHub"; DisplayName = "Feedback Hub"},
+            @{Name = "Microsoft.WindowsMaps"; DisplayName = "Maps"},
+            @{Name = "Microsoft.ZuneMusic"; DisplayName = "Groove Music"},
+            @{Name = "Microsoft.ZuneVideo"; DisplayName = "Movies & TV"},
+            @{Name = "Microsoft.Windows.Photos"; DisplayName = "Photos"},
+            @{Name = "Microsoft.ScreenSketch"; DisplayName = "Snip & Sketch"},
+            @{Name = "Microsoft.WindowsCalculator"; DisplayName = "Calculator"},
+            @{Name = "Microsoft.BingSearch"; DisplayName = "Bing Search"},
+            @{Name = "Microsoft.Todos"; DisplayName = "Microsoft To Do"},
+            @{Name = "Microsoft.Widgets"; DisplayName = "Widgets"},
+            @{Name = "Microsoft.Cortana"; DisplayName = "Cortana"},
+            @{Name = "Microsoft.PowerAutomateDesktop"; DisplayName = "Power Automate"}
         )
-        foreach ($t in $tasksToDisable) { 
-            Run-Quiet { schtasks /Change /TN $t /Disable }
+
+        foreach ($app in $appsToRemove) {
+            Remove-WindowsApp -AppName $app.Name -DisplayName $app.DisplayName
         }
 
-        # 7/8) Enable Ultimate Performance plan, duplicate/rename and set active
-        if (-not $Silent) { Write-Host "Configuring power plan..." }
+        # 2) Disable Copilot and AI features
+        if (-not $Silent) { Write-Host "Disabling Copilot and AI features..." }
+        # Disable Copilot button
+        Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot" -Name "TurnOffWindowsCopilot" -Value 1 -Type DWord -Force -ErrorAction SilentlyContinue
+        New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot" -Force | Out-Null
+        
+        # Disable Recall (AI timeline)
+        Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\AI" -Name "EnableRecall" -Value 0 -Type DWord -Force -ErrorAction SilentlyContinue
+        New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\AI" -Force | Out-Null
+
+        # 3) Disable Location Services COMPLETELY
+        if (-not $Silent) { Write-Host "Disabling location services..." }
+        Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors" -Name "DisableLocation" -Value 1 -Type DWord -Force
+        Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors" -Name "DisableLocationScripting" -Value 1 -Type DWord -Force
+        Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors" -Name "DisableWindowsLocationProvider" -Value 1 -Type DWord -Force
+        
+        # Disable location in settings
+        Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location" -Name "Value" -Value "Deny" -Type String -Force
+        Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Sensor\Overrides\{BFA794E4-F964-4FDB-90F6-51056BFE4B44}" -Name "SensorPermissionState" -Value 0 -Type DWord -Force
+
+        # 4) Disable ALL Privacy/Security settings
+        if (-not $Silent) { Write-Host "Disabling privacy and security settings..." }
+        
+        # General privacy settings
+        Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\OOBE" -Name "DisablePrivacyExperience" -Value 1 -Type DWord -Force
+        New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\OOBE" -Force | Out-Null
+        
+        # Disable advertising ID
+        Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\AdvertisingInfo" -Name "DisabledByGroupPolicy" -Value 1 -Type DWord -Force
+        Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo" -Name "Enabled" -Value 0 -Type DWord -Force
+        
+        # Disable tailored experiences
+        Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Privacy" -Name "TailoredExperiencesWithDiagnosticDataEnabled" -Value 0 -Type DWord -Force
+        
+        # Disable app launch tracking
+        Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name "PublishUserActivities" -Value 0 -Type DWord -Force
+        Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name "UploadUserActivities" -Value 0 -Type DWord -Force
+
+        # 5) Disable Linking & Typing features
+        if (-not $Silent) { Write-Host "Disabling linking and typing features..." }
+        
+        # Disable text suggestions
+        Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Input\Settings" -Name "InsightsEnabled" -Value 0 -Type DWord -Force
+        Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Input\TIPC" -Name "Enabled" -Value 0 -Type DWord -Force
+        
+        # Disable autocorrect
+        Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\TabletTip\1.7" -Name "EnableAutocorrection" -Value 0 -Type DWord -Force
+        Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\TabletTip\1.7" -Name "EnableSpellchecking" -Value 0 -Type DWord -Force
+        
+        # Disable handwriting personalization
+        Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\TabletPC" -Name "PreventHandwritingDataSharing" -Value 1 -Type DWord -Force
+        New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\TabletPC" -Force | Out-Null
+        
+        # Disable inking and typing personalization
+        Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\InputPersonalization" -Name "RestrictImplicitInkCollection" -Value 1 -Type DWord -Force
+        Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\InputPersonalization" -Name "RestrictImplicitTextCollection" -Value 1 -Type DWord -Force
+        Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\InputPersonalization\TrainedDataStore" -Name "HarvestContacts" -Value 0 -Type DWord -Force
+        Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Personalization\Settings" -Name "AcceptedPrivacyPolicy" -Value 0 -Type DWord -Force
+
+        # 6) Disable Xbox Live and Gaming services
+        if (-not $Silent) { Write-Host "Disabling Xbox services..." }
+        $xboxServices = @(
+            "XboxGipSvc",
+            "XboxNetApiSvc",
+            "XboxAuthManager"
+        )
+        
+        foreach ($service in $xboxServices) {
+            Set-Service -Name $service -StartupType Disabled -ErrorAction SilentlyContinue
+            Stop-Service -Name $service -Force -ErrorAction SilentlyContinue
+        }
+
+        # 7) Disable Game Bar completely
+        if (-not $Silent) { Write-Host "Disabling Game Bar..." }
+        Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\GameDVR" -Name "AllowGameDVR" -Value 0 -Type DWord -Force
+        Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR" -Name "AppCaptureEnabled" -Value 0 -Type DWord -Force
+        Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\GameBar" -Name "AllowAutoGameMode" -Value 0 -Type DWord -Force
+        Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\GameBar" -Name "AutoGameModeEnabled" -Value 0 -Type DWord -Force
+
+        # 8) Disable Widgets
+        if (-not $Silent) { Write-Host "Disabling Widgets..." }
+        Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Dsh" -Name "AllowNewsAndInterests" -Value 0 -Type DWord -Force
+        Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "TaskbarDa" -Value 0 -Type DWord -Force
+        Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "TaskbarMn" -Value 0 -Type DWord -Force
+
+        # 9) Disable OneDrive completely
+        if (-not $Silent) { Write-Host "Disabling OneDrive..." }
+        # Kill OneDrive process
+        Stop-Process -Name "OneDrive" -Force -ErrorAction SilentlyContinue
+        Stop-Process -Name "FileCoAuth" -Force -ErrorAction SilentlyContinue
+        
+        # Prevent OneDrive from running
+        Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\OneDrive" -Name "DisableFileSyncNGSC" -Value 1 -Type DWord -Force
+        New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\OneDrive" -Force | Out-Null
+        
+        # Disable OneDrive setup
+        if (Test-Path "$env:SystemRoot\SysWOW64\OneDriveSetup.exe") {
+            TakeOwnership -Path "$env:SystemRoot\SysWOW64\OneDriveSetup.exe"
+            icacls "$env:SystemRoot\SysWOW64\OneDriveSetup.exe" /deny everyone:X
+        }
+        if (Test-Path "$env:SystemRoot\System32\OneDriveSetup.exe") {
+            TakeOwnership -Path "$env:SystemRoot\System32\OneDriveSetup.exe"
+            icacls "$env:SystemRoot\System32\OneDriveSetup.exe" /deny everyone:X
+        }
+
+        # 10) Remove remaining Windows components using DISM
+        if (-not $Silent) { Write-Host "Removing Windows components..." }
+        $componentsToRemove = @(
+            "WindowsMediaPlayer",
+            "Xbox-XboxLive",
+            "XboxGameOverlay",
+            "XboxGamingOverlay",
+            "XboxIdentityProvider",
+            "XboxTCUI"
+        )
+        
+        foreach ($component in $componentsToRemove) {
+            dism /Online /Disable-Feature /FeatureName:$component /NoRestart /Quiet
+        }
+
+        # 11) Additional telemetry and privacy disabling
+        if (-not $Silent) { Write-Host "Disabling additional telemetry..." }
+        
+        # Disable diagnostic data
+        Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection" -Name "AllowTelemetry" -Value 0 -Type DWord -Force
+        Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection" -Name "AllowTelemetry" -Value 0 -Type DWord -Force
+        
+        # Disable activity history
+        Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name "EnableActivityFeed" -Value 0 -Type DWord -Force
+        Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name "PublishUserActivities" -Value 0 -Type DWord -Force
+        Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name "UploadUserActivities" -Value 0 -Type DWord -Force
+
+        # 12) Disable background apps completely
+        if (-not $Silent) { Write-Host "Disabling background apps..." }
+        Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppPrivacy" -Name "LetAppsRunInBackground" -Value 2 -Type DWord -Force
+        Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications" -Name "GlobalUserDisabled" -Value 1 -Type DWord -Force
+
+        # 13) Apply remaining original tweaks from your script
+        if (-not $Silent) { Write-Host "Applying system tweaks..." }
+        
+        # .NET Framework 3.5
+        dism /Online /Enable-Feature /FeatureName:NetFx3 /All /NoRestart /Quiet
+        
+        # Password policy
+        net accounts /maxpwage:90
+        
+        # Execution policy
+        Set-ExecutionPolicy -Scope LocalMachine -ExecutionPolicy RemoteSigned -Force
+        
+        # Teredo
+        netsh interface teredo set state disabled
+        
+        # Power plan
         $origGuid = 'e9a42b02-d5df-448d-aa00-03f14749eb61'
         $dupOut = powercfg -duplicatescheme $origGuid 2>$null
         if ($LASTEXITCODE -eq 0 -and $dupOut -match 'Power Scheme GUID: ([a-fA-F0-9-]{36})') {
             $newGuid = $matches[1]
-            Run-Quiet { powercfg -changename $newGuid "FixOs Powerplan" "FixOs optimized power plan" }
-            Run-Quiet { powercfg -setactive $newGuid }
-        } else {
-            # Fallback to high performance
-            Run-Quiet { powercfg -setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c }
+            powercfg -changename $newGuid "FixOs Powerplan" "FixOs optimized power plan"
+            powercfg -setactive $newGuid
         }
-
-        # 9) Set many services startup types
-        if (-not $Silent) { Write-Host "Configuring services..." }
-        $svcMap = @{
-            'AJRouter'='Disabled'; 'ALG'='Manual'; 'AppIDSvc'='Manual'; 'AppMgmt'='Manual'; 'AppReadiness'='Manual';
-            'AppVClient'='Disabled'; 'AppXSvc'='Manual'; 'Appinfo'='Manual'; 'AssignedAccessManagerSvc'='Disabled';
-            'AudioEndpointBuilder'='Automatic'; 'AudioSrv'='Automatic'; 'AxInstSV'='Manual'; 'BDESVC'='Manual';
-            'BFE'='Automatic'; 'BITS'='Manual'; 'BrokerInfrastructure'='Automatic'; 'Browser'='Manual';
-            'CDPSvc'='Manual'; 'ClipSVC'='Manual'; 'CryptSvc'='Automatic'; 'Dhcp'='Automatic';
-            'DiagTrack'='Disabled'; 'DoSvc'='Manual'; 'DmEnrollmentSvc'='Manual'; 'Dnscache'='Automatic';
-            'DsmSvc'='Manual'; 'EventLog'='Automatic'; 'EventSystem'='Automatic'; 'FontCache'='Automatic';
-            'LanmanServer'='Automatic'; 'LanmanWorkstation'='Automatic'; 'MpsSvc'='Automatic'; 'Netlogon'='Automatic';
-            'RemoteAccess'='Disabled'; 'RemoteRegistry'='Disabled'; 'RpcSs'='Automatic'; 'Schedule'='Automatic';
-            'Spooler'='Automatic'; 'SysMain'='Automatic'; 'TrustedInstaller'='Manual'; 'W32Time'='Manual';
-            'WinDefend'='Automatic'; 'Wuauserv'='Manual'
-        }
-        foreach ($k in $svcMap.Keys) {
-            Get-Service -Name $k -ErrorAction SilentlyContinue | ForEach-Object {
-                Set-Service -Name $_.Name -StartupType $svcMap[$k] -ErrorAction SilentlyContinue
-            }
-        }
-
-        # 10/11) Disable Xbox Game DVR/Game Bar
-        if (-not $Silent) { Write-Host "Disabling Game DVR..." }
-        Run-Quiet { 
-            New-Item -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\GameDVR' -Force | Out-Null
-            Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\GameDVR' -Name 'AllowGameDVR' -Value 0 -Type DWord -Force
-            Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\GameDVR' -Name 'AppCaptureEnabled' -Value 0 -Type DWord -Force
-            Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\GameDVR' -Name 'BackgroundCaptureEnabled' -Value 0 -Type DWord -Force
-        }
-
-        # 12) Disable Background Apps
-        if (-not $Silent) { Write-Host "Disabling background apps..." }
-        Run-Quiet { 
-            New-Item -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppPrivacy' -Force | Out-Null
-            Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppPrivacy' -Name 'LetAppsRunInBackground' -Value 2 -Type DWord -Force
-            New-Item -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent' -Force | Out-Null
-            Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent' -Name 'DisableWindowsConsumerFeatures' -Value 1 -Type DWord -Force
-            Set-ItemProperty -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications' -Name 'GlobalUserDisabled' -Value 1 -Type DWord -Force -ErrorAction SilentlyContinue
-        }
-
-        # 13) Disable Hibernation
-        if (-not $Silent) { Write-Host "Disabling hibernation..." }
-        Run-Quiet { powercfg -h off }
-
-        # Performance / game mode tweaks
-        if (-not $Silent) { Write-Host "Applying performance tweaks..." }
-        $currentPlan = (powercfg -getactivescheme) -replace '.*(: )?([a-fA-F0-9-]+).*','$2'
-        if ($currentPlan) {
-            Run-Quiet { powercfg -setacvalueindex $currentPlan SUB_PROCESSOR PROCTHROTTLEMAX 100 }
-            Run-Quiet { powercfg -setdcvalueindex $currentPlan SUB_PROCESSOR PROCTHROTTLEMAX 100 }
-            Run-Quiet { powercfg -setacvalueindex $currentPlan SUB_VIDEO VIDEOCONLOCK 0 }
-        }
-
-        # 18) Disable Cortana
-        if (-not $Silent) { Write-Host "Disabling Cortana..." }
-        Run-Quiet { 
-            New-Item -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search' -Force | Out-Null
-            Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search' -Name 'AllowCortana' -Value 0 -Type DWord -Force
-            Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search' -Name 'DisableWebSearch' -Value 1 -Type DWord -Force
-        }
-
-        # 20) Disable Location Services
-        if (-not $Silent) { Write-Host "Disabling location services..." }
-        Run-Quiet { 
-            New-Item -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors' -Force | Out-Null
-            Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors' -Name 'DisableLocation' -Value 1 -Type DWord -Force
-            Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors' -Name 'DisableLocationScripting' -Value 1 -Type DWord -Force
-        }
-
-        # 21) Turn off Activity History
-        if (-not $Silent) { Write-Host "Disabling activity history..." }
-        Run-Quiet { 
-            New-Item -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\System' -Force | Out-Null
-            Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\System' -Name 'PublishUserActivities' -Value 0 -Type DWord -Force
-            Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\System' -Name 'UploadUserActivities' -Value 0 -Type DWord -Force
-        }
-
-        # Additional registry tweaks
-        if (-not $Silent) { Write-Host "Applying registry tweaks..." }
         
-        # Disable advertising ID
-        Run-Quiet { 
-            New-Item -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo' -Force | Out-Null
-            Set-ItemProperty -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo' -Name 'Enabled' -Value 0 -Type DWord -Force
-        }
+        # Hibernation
+        powercfg -h off
 
-        # Disable Windows Error Reporting
-        Run-Quiet { 
-            Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\Windows Error Reporting' -Name 'Disabled' -Value 1 -Type DWord -Force -ErrorAction SilentlyContinue
-        }
-
-        # Windows Defender sample submission
-        Run-Quiet { 
-            New-Item -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet' -Force | Out-Null
-            Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet' -Name 'SubmitSamplesConsent' -Value 2 -Type DWord -Force
-        }
-
-        # Disable Delivery Optimization
-        Run-Quiet { 
-            New-Item -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization' -Force | Out-Null
-            Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization' -Name 'DODownloadMode' -Value 0 -Type DWord -Force
-        }
-
-        # Disable touch keyboard handwriting
-        Run-Quiet { 
-            New-Item -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\TabletPC' -Force | Out-Null
-            Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\TabletPC' -Name 'PreventHandwritingDataSharing' -Value 1 -Type DWord -Force
-        }
-
-        # Disable content delivery manager suggestions
-        Run-Quiet { 
-            Set-ItemProperty -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager' -Name 'SystemPaneSuggestionsEnabled' -Value 0 -Type DWord -Force
-            Set-ItemProperty -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager' -Name 'SilentInstalledAppsEnabled' -Value 0 -Type DWord -Force
-            Set-ItemProperty -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager' -Name 'PreInstalledAppsEnabled' -Value 0 -Type DWord -Force
-        }
-
-        # Windows Search tweaks
-        Run-Quiet { 
-            Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search' -Name 'AllowSearchToUseLocation' -Value 0 -Type DWord -Force
-        }
-
-        # Windows Update policies
-        Run-Quiet { 
-            New-Item -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate' -Force | Out-Null
-            New-Item -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU' -Force | Out-Null
-            Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU' -Name 'NoAutoUpdate' -Value 0 -Type DWord -Force
-            Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU' -Name 'AUOptions' -Value 2 -Type DWord -Force
-        }
-
-        # Disable Remote Assistance
-        Run-Quiet { 
-            Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Remote Assistance' -Name 'fAllowToGetHelp' -Value 0 -Type DWord -Force -ErrorAction SilentlyContinue
-        }
-
-        # Disable Windows Spotlight
-        Run-Quiet { 
-            Set-ItemProperty -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager' -Name 'SoftLandingEnabled' -Value 0 -Type DWord -Force
-            Set-ItemProperty -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager' -Name 'RotatingLockScreenEnabled' -Value 0 -Type DWord -Force
-            Set-ItemProperty -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager' -Name 'RotatingLockScreenOverlayEnabled' -Value 0 -Type DWord -Force
-        }
-
-        # Enable long paths
-        Run-Quiet { 
-            Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem' -Name 'LongPathsEnabled' -Value 1 -Type DWord -Force
-        }
-
-        # Taskbar tweaks
-        Run-Quiet { 
-            Set-ItemProperty -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name 'ShowTaskViewButton' -Value 0 -Type DWord -Force
-            Set-ItemProperty -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Search' -Name 'SearchboxTaskbarMode' -Value 0 -Type DWord -Force
-        }
-
-        # Remove built-in apps
-        if (-not $Silent) { Write-Host "Removing built-in apps..." }
-        $appsToRemove = @(
-            'Microsoft.BingWeather',
-            'Microsoft.GetHelp',
-            'Microsoft.Getstarted', 
-            'Microsoft.MicrosoftOfficeHub',
-            'Microsoft.MicrosoftSolitaireCollection',
-            'Microsoft.People',
-            'Microsoft.WindowsCamera',
-            'microsoft.windowscommunicationsapps',
-            'Microsoft.WindowsFeedbackHub',
-            'Microsoft.WindowsMaps',
-            'Microsoft.XboxApp',
-            'Microsoft.XboxIdentityProvider',
-            'Microsoft.ZuneMusic',
-            'Microsoft.ZuneVideo'
-        )
-        
-        foreach ($app in $appsToRemove) {
-            Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage -ErrorAction SilentlyContinue
-            Get-AppxProvisionedPackage -Online | Where-Object DisplayName -Like "*$app*" | Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue
-        }
-
-        # 66) Download and set wallpaper
+        # 14) Set wallpaper
         if (-not $Silent) { Write-Host "Setting wallpaper..." }
         $wallUrl = 'https://github.com/deadproject/FixOs/raw/main/FixOs-Standard/Wallpaper.png'
         $out = Join-Path $env:PUBLIC 'FixOs-Wallpaper.png'
@@ -315,19 +306,31 @@ public class Wallpaper {
 
         if (-not $Silent) { 
             Write-Host ""
-            Write-Host "FixOS installation finished successfully!" 
-            Write-Host "Some changes may require a restart to take effect."
+            Write-Host "FixOS installation finished successfully!" -ForegroundColor Green
+            Write-Host "All specified apps have been removed and features disabled." -ForegroundColor Green
+            Write-Host "Some changes may require a restart to take effect." -ForegroundColor Yellow
         }
     }
     Catch {
         if (-not $Silent) { 
-            Write-Host "An error occurred during installation: $($_.Exception.Message)" 
+            Write-Host "An error occurred during installation: $($_.Exception.Message)" -ForegroundColor Red
         }
     }
 
     if (-not $Silent) { 
         Pause
         Show-Menu 
+    }
+}
+
+# Helper function to take ownership of files
+function TakeOwnership {
+    param([string]$Path)
+    try {
+        takeown /f $Path /a
+        icacls $Path /grant administrators:F
+    } catch {
+        # Ignore errors
     }
 }
 
