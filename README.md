@@ -22,7 +22,7 @@
 
 ---
 
-### 🎨 Frontend Stack
+### 🎨 Stack
 
 <p align="center">
   <img src="https://skillicons.dev/icons?i=html,css,js,ts,bash,powershell,git" height="50" />
