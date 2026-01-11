@@ -1,4 +1,4 @@
-<!-- Modern GitHub README -->
+<!-- Project GitHub README -->
 
 <div align="center">
 
@@ -25,7 +25,7 @@
 ### 🎨 Stack
 
 <p align="center">
-  <img src="https://skillicons.dev/icons?i=html,css,js,ts,bash,powershell,git" height="50" />
+  <img src="https://skillicons.dev/icons?i=html,css,js,ts,bash,powershell,python" height="50" />
 </p>
 
 ---
