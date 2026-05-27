@@ -49,6 +49,6 @@
 ### ✳️ Quote
 > “Automate the predictable so you can innovate the unpredictable.”
 
-<sub>Built by Project • Owner of <a href="https://github.com/DeveIopmentSpace">DevelopmentSpace</a> • Visit <a href="http://DevelopmentSpace.pages.dev">DevSpace.com</a></sub>
+<sub>Built by Project • Developer in <a href="https://github.com/DeveIopmentSpace">DevelopmentSpace</a> • Visit <a href="http://DevelopmentSpace.pages.dev">DevSpace.com</a></sub>
 
 </div>
