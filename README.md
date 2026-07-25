@@ -22,7 +22,7 @@
 
 ---
 
-### 🎨 Stack
+### Stack
 
 <p align="center">
   <img src="https://skillicons.dev/icons?i=html,css,js,ts,bash,powershell,python" height="50" />
@@ -30,7 +30,7 @@
 
 ---
 
-### 🌐 Connect
+### Connect
 
 <p align="center">
   <a href="https://github.com/DeveIopmentSpace" target="_blank">
@@ -43,11 +43,6 @@
     <img src="https://img.shields.io/badge/🌐%20Website-00C6FF?style=for-the-badge&logo=google-chrome&logoColor=white" alt="Website"/>
   </a>
 </p>
-
----
-
-### ✳️ Quote
-> “Automate the predictable so you can innovate the unpredictable.”
 
 <sub>Built by Project • Developer in <a href="https://github.com/DeveIopmentSpace">DevelopmentSpace</a> • Visit <a href="http://DevelopmentSpace.pages.dev">DevSpace.com</a></sub>
 
